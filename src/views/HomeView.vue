@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import data from '@/assets/data/nouns-declension-cz.json'
 
-// 1. Full case labels
+// 1. Correct case labels
 const caseLabels = {
   NOMsg: 'Nominativ Singular',
   NOMpl: 'Nominativ Plural',
@@ -20,12 +20,10 @@ const caseLabels = {
   VOKpl: 'Vokativ Plural',
 }
 
-// 2. Quiz state
 const nounInTest = ref(getRandomNoun())
 const selectedAnswers = ref(new Set())
 const answerIsCorrect = ref(false)
 
-// 3. Progress tracking
 const totalAttempts = ref(0)
 const totalCorrect = ref(0)
 const totalWrong = computed(() => totalAttempts.value - totalCorrect.value)
@@ -34,7 +32,6 @@ const successRate = computed(() => {
   return Math.round((totalCorrect.value / totalAttempts.value) * 100)
 })
 
-// 4. Helpers
 function getRandomNoun() {
   const randomIndex = Math.floor(Math.random() * data.length)
   return data[randomIndex]
@@ -50,7 +47,6 @@ function generateOption(solution, pool) {
   return Array.from(options).sort(() => Math.random() - 0.5)
 }
 
-// 5. Question generation
 const question = computed(() => {
   const testNoun = JSON.parse(JSON.stringify(nounInTest.value))
   const baseForm = nounInTest.value.NOMsg
@@ -63,7 +59,6 @@ const question = computed(() => {
   return { baseForm, caseToAsk, solution, options }
 })
 
-// 6. Answer selection
 function selectOption(option) {
   if (answerIsCorrect.value || selectedAnswers.value.has(option)) return
 
@@ -74,14 +69,12 @@ function selectOption(option) {
     totalCorrect.value++
     totalAttempts.value++
   } else {
-    // count wrong only once per question round
     if (selectedAnswers.value.size === 1) {
       totalAttempts.value++
     }
   }
 }
 
-// 7. Load new noun
 function resetQuiz() {
   nounInTest.value = getRandomNoun()
   selectedAnswers.value.clear()
@@ -90,52 +83,62 @@ function resetQuiz() {
 </script>
 
 <template>
-  <main>
-    <h1>Grammatiktrainer Tschechisch – Deklination der Nomen</h1>
+  <div class="content-container">
+    <main>
+      <h1>Grammatiktrainer Tschechisch – Deklination der Nomen</h1>
 
-    <div class="quiz">
-      <p>
-        Wie lautet die Form von <strong>{{ question.baseForm }}</strong> im
-        <strong>{{ caseLabels[question.caseToAsk] }}</strong>?
-      </p>
+      <div class="quiz">
+        <p>
+          Wie lautet die Form von <strong>{{ question.baseForm }}</strong> im
+          <strong>{{ caseLabels[question.caseToAsk] }}</strong>?
+        </p>
 
-      <div class="options">
-        <button
-          v-for="(opt, index) in question.options"
-          :key="index"
-          @click="selectOption(opt)"
-          :class="{
-            wrong: selectedAnswers.has(opt) && opt !== question.solution,
-            correct: answerIsCorrect && opt === question.solution
-          }"
-          :disabled="answerIsCorrect || selectedAnswers.has(opt)"
-        >
-          {{ opt }}
+        <div class="options">
+          <button
+            v-for="(opt, index) in question.options"
+            :key="index"
+            @click="selectOption(opt)"
+            :class="{
+              wrong: selectedAnswers.has(opt) && opt !== question.solution,
+              correct: answerIsCorrect && opt === question.solution
+            }"
+            :disabled="answerIsCorrect || selectedAnswers.has(opt)"
+          >
+            {{ opt }}
+          </button>
+        </div>
+
+        <p v-if="answerIsCorrect" class="feedback correct">
+          ✔️ Richtig! Gut gemacht.
+        </p>
+
+        <button v-if="answerIsCorrect" class="next-button" @click="resetQuiz">
+          Nächstes Substantiv
         </button>
       </div>
+    </main>
 
-      <p v-if="answerIsCorrect" class="feedback correct">
-        ✔️ Richtig! Gut gemacht.
-      </p>
-
-      <button v-if="answerIsCorrect" class="next-button" @click="resetQuiz">
-        Nächstes Substantiv
-      </button>
-    </div>
-
-    <div class="stats">
-      {{ totalAttempts }} Aufgaben,
-      {{ totalCorrect }} richtig,
-      {{ totalWrong }} falsch
-      ({{ successRate }}%)
-    </div>
-  </main>
+    <aside>
+      <h2>Statistik</h2>
+      <p><strong>{{ totalAttempts }}</strong> Aufgaben</p>
+      <p><strong>{{ totalCorrect }}</strong> richtig</p>
+      <p><strong>{{ totalWrong }}</strong> falsch</p>
+      <p><strong>{{ successRate }}%</strong> korrekt</p>
+    </aside>
+  </div>
 </template>
 
 <style scoped lang="scss">
-main {
+.content-container {
+  display: flex;
+  gap: 2rem;
+  flex-direction: row;
+  align-items: flex-start;
   padding: 2rem;
+}
 
+main {
+  flex: 2;
   h1 {
     text-align: center;
     font-size: 2rem;
@@ -143,8 +146,6 @@ main {
   }
 
   .quiz {
-    max-width: 600px;
-    margin: 0 auto;
     font-size: 1.25rem;
   }
 
@@ -207,12 +208,22 @@ main {
       background-color: #1565c0;
     }
   }
+}
 
-  .stats {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 1rem;
-    color: #555;
+aside {
+  flex: 1;
+  border-left: 1px solid #ddd;
+  padding-left: 2rem;
+  font-size: 1rem;
+  color: #444;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0.5rem 0;
   }
 }
 </style>
