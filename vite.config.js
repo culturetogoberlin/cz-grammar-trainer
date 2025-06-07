@@ -10,6 +10,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+  base: '/cz-grammar-trainer/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
