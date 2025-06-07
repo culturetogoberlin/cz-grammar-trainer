@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import data from '@/assets/data/nouns-declension-cz.json'
 
-// 1. Correct case labels
+// ✅ Case labels (corrected)
 const caseLabels = {
   NOMsg: 'Nominativ Singular',
   NOMpl: 'Nominativ Plural',
@@ -20,23 +20,22 @@ const caseLabels = {
   VOKpl: 'Vokativ Plural',
 }
 
-const nounInTest = ref(getRandomNoun())
+// ✅ State
+const question = ref(null)
 const selectedAnswers = ref(new Set())
 const answerIsCorrect = ref(false)
+const askedQuestions = ref(new Set())
 
 const totalAttempts = ref(0)
 const totalCorrect = ref(0)
+
 const totalWrong = computed(() => totalAttempts.value - totalCorrect.value)
 const successRate = computed(() => {
   if (totalAttempts.value === 0) return 0
   return Math.round((totalCorrect.value / totalAttempts.value) * 100)
 })
 
-function getRandomNoun() {
-  const randomIndex = Math.floor(Math.random() * data.length)
-  return data[randomIndex]
-}
-
+// ✅ Option generation
 function generateOption(solution, pool) {
   let options = new Set()
   options.add(solution)
@@ -47,17 +46,45 @@ function generateOption(solution, pool) {
   return Array.from(options).sort(() => Math.random() - 0.5)
 }
 
-const question = computed(() => {
-  const testNoun = JSON.parse(JSON.stringify(nounInTest.value))
-  const baseForm = nounInTest.value.NOMsg
-  delete testNoun.NOMsg
-  const keys = Object.keys(testNoun)
-  const randomIndex = Math.floor(Math.random() * keys.length)
-  const caseToAsk = keys[randomIndex]
-  const solution = testNoun[caseToAsk]
-  const options = generateOption(solution, Object.values(testNoun))
-  return { baseForm, caseToAsk, solution, options }
-})
+// ✅ Question generation
+function getNewQuestion() {
+  const maxTries = 1000
+  let tries = 0
+
+  while (tries < maxTries) {
+    tries++
+    const randomNoun = data[Math.floor(Math.random() * data.length)]
+    const baseForm = randomNoun.NOMsg
+    const declensions = { ...randomNoun }
+    delete declensions.NOMsg
+
+    const keys = Object.keys(declensions)
+    const caseToAsk = keys[Math.floor(Math.random() * keys.length)]
+
+    const key = `${baseForm}|${caseToAsk}`
+    if (!askedQuestions.value.has(key)) {
+      askedQuestions.value.add(key)
+      const solution = declensions[caseToAsk]
+      const options = generateOption(solution, Object.values(declensions))
+
+      return { baseForm, caseToAsk, solution, options }
+    }
+  }
+
+  return null // All exhausted
+}
+
+// ✅ Quiz control
+function resetQuiz() {
+  const next = getNewQuestion()
+  if (next) {
+    question.value = next
+    selectedAnswers.value.clear()
+    answerIsCorrect.value = false
+  } else {
+    question.value = null
+  }
+}
 
 function selectOption(option) {
   if (answerIsCorrect.value || selectedAnswers.value.has(option)) return
@@ -75,11 +102,18 @@ function selectOption(option) {
   }
 }
 
-function resetQuiz() {
-  nounInTest.value = getRandomNoun()
+// ✅ Bonus: Reset full quiz
+function resetAll() {
+  askedQuestions.value.clear()
+  totalAttempts.value = 0
+  totalCorrect.value = 0
   selectedAnswers.value.clear()
   answerIsCorrect.value = false
+  question.value = getNewQuestion()
 }
+
+// ✅ Initialize first question
+resetQuiz()
 </script>
 
 <template>
@@ -87,7 +121,7 @@ function resetQuiz() {
     <main>
       <h1>Grammatiktrainer Tschechisch – Deklination der Nomen</h1>
 
-      <div class="quiz">
+      <div class="quiz" v-if="question">
         <p>
           Wie lautet die Form von <strong>{{ question.baseForm }}</strong> im
           <strong>{{ caseLabels[question.caseToAsk] }}</strong>?
@@ -116,6 +150,10 @@ function resetQuiz() {
           Nächstes Substantiv
         </button>
       </div>
+
+      <div class="quiz" v-else>
+        <p>✅ Du hast alle möglichen Fragen durchgespielt!</p>
+      </div>
     </main>
 
     <aside>
@@ -124,6 +162,9 @@ function resetQuiz() {
       <p><strong>{{ totalCorrect }}</strong> richtig</p>
       <p><strong>{{ totalWrong }}</strong> falsch</p>
       <p><strong>{{ successRate }}%</strong> korrekt</p>
+      <button class="reset-button" @click="resetAll">
+        Quiz zurücksetzen
+      </button>
     </aside>
   </div>
 </template>
@@ -224,6 +265,21 @@ aside {
 
   p {
     margin: 0.5rem 0;
+  }
+
+  .reset-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #9e9e9e;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #757575;
+    }
   }
 }
 </style>
