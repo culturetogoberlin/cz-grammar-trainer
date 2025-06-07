@@ -172,33 +172,47 @@ resetQuiz()
 <style scoped lang="scss">
 .content-container {
   display: flex;
+  flex-direction: column;
+  padding: 1rem;
   gap: 2rem;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 2rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 2rem;
+  }
 }
 
 main {
   flex: 2;
+
   h1 {
     text-align: center;
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+
+    @media (min-width: 768px) {
+      font-size: 2rem;
+    }
   }
 
   .quiz {
-    font-size: 1.25rem;
+    font-size: 1rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
   }
 
   .options {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
 
     button {
-      padding: 0.75rem 1.25rem;
-      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
       border: none;
       border-radius: 0.5rem;
       background-color: #eee;
@@ -223,11 +237,16 @@ main {
         cursor: default;
         opacity: 0.9;
       }
+
+      @media (min-width: 768px) {
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+      }
     }
   }
 
   .feedback {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     font-weight: bold;
 
     &.correct {
@@ -236,8 +255,8 @@ main {
   }
 
   .next-button {
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
+    margin-top: 1.25rem;
+    padding: 0.6rem 1.2rem;
     font-size: 1rem;
     background-color: #1976d2;
     color: white;
@@ -253,14 +272,26 @@ main {
 
 aside {
   flex: 1;
-  border-left: 1px solid #ddd;
-  padding-left: 2rem;
-  font-size: 1rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+
+  @media (min-width: 768px) {
+    border-top: none;
+    border-left: 1px solid #ddd;
+    padding-top: 0;
+    padding-left: 2rem;
+  }
+
+  font-size: 0.95rem;
   color: #444;
 
   h2 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     margin-bottom: 1rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
   }
 
   p {
@@ -270,7 +301,7 @@ aside {
   .reset-button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     background-color: #9e9e9e;
     color: white;
     border: none;
@@ -280,6 +311,11 @@ aside {
     &:hover {
       background-color: #757575;
     }
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
   }
 }
 </style>
+
