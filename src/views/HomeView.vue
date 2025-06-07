@@ -123,7 +123,7 @@ resetQuiz()
 
       <div class="quiz" v-if="question">
         <p>
-          Wie lautet die Form von <strong>{{ question.baseForm }}</strong> im
+          <strong>{{ question.baseForm }}</strong> im
           <strong>{{ caseLabels[question.caseToAsk] }}</strong>?
         </p>
 
