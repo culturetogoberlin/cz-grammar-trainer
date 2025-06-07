@@ -279,6 +279,8 @@ aside {
   flex: 1;
   border-top: 1px solid #ddd;
   padding-top: 1rem;
+  font-size: 0.95rem;
+  color: #444;
 
   @media (min-width: 768px) {
     border-top: none;
@@ -287,8 +289,6 @@ aside {
     padding-left: 2rem;
   }
 
-  font-size: 0.95rem;
-  color: #444;
 
   h2 {
     font-size: 1.1rem;
