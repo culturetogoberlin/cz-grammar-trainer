@@ -1,6 +1,6 @@
 # Czech Grammar Trainer
 
-**A lightweight web-based app to practice Czech noun declension.**
+**A lightweight web-based app to practice Czech grammar**
 
 Live demo:  
 👉 [https://culturetogoberlin.github.io/cz-grammar-trainer/](https://culturetogoberlin.github.io/cz-grammar-trainer/)
@@ -8,6 +8,8 @@ Live demo:
 ---
 
 ## 📚 Features
+
+Currently implemented:
 
 - Interactive quiz for Czech noun declension
 - Randomized questions with singular/plural and case variation
