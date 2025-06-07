@@ -172,6 +172,8 @@ resetQuiz()
 <style scoped lang="scss">
 .content-container {
   display: flex;
+  background-color: #fff;
+  min-height: 90vh;
   flex-direction: column;
   padding: 1rem;
   gap: 2rem;
@@ -185,7 +187,8 @@ resetQuiz()
 
 main {
   flex: 2;
-
+  justify-content: center;
+  text-align: center;
   h1 {
     text-align: center;
     font-size: 1.125rem;
@@ -197,8 +200,10 @@ main {
   }
 
   .quiz {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-size: 1rem;
-
     @media (min-width: 768px) {
       font-size: 1.25rem;
     }
