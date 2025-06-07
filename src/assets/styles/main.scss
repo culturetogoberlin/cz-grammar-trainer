@@ -1,4 +1,4 @@
-@import './base.scss';
+@use "@/assets/styles/base.scss" as *;
 
 #app {
   max-width: 1600px;

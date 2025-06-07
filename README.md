@@ -1,4 +1,4 @@
-# 🇨🇿 Czech Grammar Trainer
+# Czech Grammar Trainer
 
 **A lightweight web-based app to practice Czech noun declension.**
 
@@ -69,4 +69,4 @@ This project is licensed under the MIT License.
 ## 👤 Author
 
 **Michael Müller**  
-[Culture to go GbR](https://culturetogo.berlin)
+[Culture to go GbR](https://culture-to-go.de)
